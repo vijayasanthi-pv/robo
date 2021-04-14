@@ -46,9 +46,6 @@ public class Firmware implements Serializable{
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 	
-	//@Id @Column(name = "id", length = 16, unique = true, nullable = false)
-    //private UUID id = UUID.randomUUID();
-	
 	@Column(unique=true, nullable=false)
 	@NotNull
 	private String name;
@@ -56,7 +53,7 @@ public class Firmware implements Serializable{
 	@Column
 	private String data;
 	
-	@OneToMany(mappedBy="firmware",cascade = {CascadeType.REMOVE})
+	@OneToMany(mappedBy="hardwareVersion",cascade = {CascadeType.REMOVE})
     private Set<Robot> robots;
 
 	@Override
