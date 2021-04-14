@@ -1,30 +1,63 @@
 package cc.robart.iot.demoproject.persistent;
 
+import java.io.Serializable;
+import java.util.Set;
+import java.util.UUID;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  * Domain object for a firmware.
  *
  */
-public class Firmware {
+@Entity(name="firmware")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Firmware implements Serializable{
 	
+	private static final long serialVersionUID = 6714150581808220833L;
+
+	@Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+        name = "UUID",
+        strategy = "org.hibernate.id.UUIDGenerator",
+        parameters = {
+            @Parameter(
+                name = "uuid_gen_strategy_class",
+                value = "org.hibernate.id.uuid.CustomVersionOneStrategy"
+            )
+        }
+    )
+    @Column(name = "id", updatable = false, nullable = false)
+    private UUID id;
+	
+	//@Id @Column(name = "id", length = 16, unique = true, nullable = false)
+    //private UUID id = UUID.randomUUID();
+	
+	@Column(unique=true, nullable=false)
+	@NotNull
 	private String name;
 	
+	@Column
 	private String data;
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getData() {
-		return data;
-	}
-
-	public void setData(String data) {
-		this.data = data;
-	}
+	
+	@OneToMany(mappedBy="firmware",cascade = {CascadeType.REMOVE})
+    private Set<Robot> robots;
 
 	@Override
 	public int hashCode() {
@@ -36,19 +69,17 @@ public class Firmware {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (obj==this)
 			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Firmware other = (Firmware) obj;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		return true;
+		if (obj instanceof Firmware) {
+			Firmware firmware = (Firmware) obj;
+				if(firmware.name.equals(this.name) && firmware.data.equals(this.data)) {
+					return true;
+				}else
+					return false;
+		}
+		
+		return false;
 	}
 
 	@Override
@@ -56,8 +87,4 @@ public class Firmware {
 		return "Firmware [name=" + name + ", data=" + data + "]";
 	}
 	
-	
-	
-	
-
 }

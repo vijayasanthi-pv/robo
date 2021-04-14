@@ -1,18 +1,15 @@
 spring:
-  # Allows you to access the database at http://localhost:8080/h2-console
-  # by giving the below url as well as username and password
-  h2:
-    console:
-      enabled: true   
+  flyway:
+    locations: classpath:/db/migration
+    check-location: true
+
   datasource:
-    url: jdbc:h2:mem:demo_project;DB_CLOSE_DELAY=-1       
+    url: jdbc:migration:mem:demo-project;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;
     driver-class-name: org.h2.Driver
-    type: org.h2.jdbcx.JdbcDataSource
-    username: h2user
-    password: h2pass
-  jackson:
-    property-naming-strategy: SNAKE_CASE
-    serialization:
-      write-dates-as-timestamps: false    
-    
- 
+    type: org.apache.tomcat.jdbc.pool.DataSource
+    #username: h2user
+    #password: h2pass
+
+  jpa:
+    hibernate:
+      ddl-auto: none
