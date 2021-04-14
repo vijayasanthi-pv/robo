@@ -1,15 +1,15 @@
+CREATE TABLE Firmwares (
+	id UUID PRIMARY KEY,
+	name VARCHAR NOT NULL,
+	data VARCHAR
+);
+
 
 CREATE TABLE Robots (
 	id UUID PRIMARY KEY,
 	name VARCHAR NOT NULL,
-	FK_FirmwareId UUID
+	FK_FirmwareId UUID,
+	foreign key (FK_FirmwareId) references Firmwares(id)
 );
 
-
-CREATE TABLE Firmwares (
-	id UUID PRIMARY KEY,
-	name VARCHAR NOT NULL,
-	data VARCHAR,
-	foreign key (TOURISTINFO_ID) references Robots(FK_FirmwareId)
-);
 

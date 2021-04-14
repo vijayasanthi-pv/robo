@@ -4,7 +4,7 @@ spring:
     check-location: true
 
   datasource:
-    url: jdbc:migration:mem:demo-project;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;
+    url: jdbc:h2:mem:demo_project;DB_CLOSE_DELAY=-1;
     driver-class-name: org.h2.Driver
     type: org.apache.tomcat.jdbc.pool.DataSource
     #username: h2user
