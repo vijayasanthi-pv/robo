@@ -50,7 +50,7 @@ public class Robot implements Serializable{
 	private String name;
 	
 	@ManyToOne
-    @JoinColumn(name ="FK_FirmwareId")
+    @JoinColumn(name ="fk_firmware_id")
     private Firmware hardwareVersion;
 	
 	public String getName() {
@@ -67,6 +67,14 @@ public class Robot implements Serializable{
 
 	public void setHardwareVersion(Firmware hardwareVersion) {
 		this.hardwareVersion = hardwareVersion;
+	}
+	
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(UUID id) {
+		this.id = id;
 	}
 	
 	@Override

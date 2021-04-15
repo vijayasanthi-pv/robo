@@ -1,17 +1,18 @@
 package cc.robart.iot.demoproject.service;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
-import org.apache.commons.beanutils.BeanUtils;
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cc.robart.iot.demoproject.exceptions.NotFoundException;
+import cc.robart.iot.demoproject.persistent.Firmware;
 import cc.robart.iot.demoproject.persistent.Robot;
 import cc.robart.iot.demoproject.repository.RobotRepository;
 
@@ -28,39 +29,26 @@ public class RobotService implements IRobotService{
 		return repository.findAll();
 	}
 
+	@Transactional
 	@Override
-	public Robot update(String name, Robot robot) {
-		Optional<Robot> optional = repository.findByName(name);
-		if (optional.isPresent()) {
-			Robot existingRobot = optional.get();
-			//If the robot name is not changed, update the existing object
-			if(existingRobot.getName().equals(robot.getName())) {
-				try {
-					BeanUtils.copyProperties(existingRobot, robot);
-					return repository.save(existingRobot);
-				} catch (IllegalAccessException | InvocationTargetException e) {
-					e.printStackTrace();
-				}
-			}
-			robot.setName(existingRobot.getName());
-			robot.setHardwareVersion(existingRobot.getHardwareVersion());
-			repository.delete(existingRobot);
-			return repository.save(robot);
-		}else {
-			throw new NotFoundException("Robot with the name "+name+" doesnot exist");
-		}
+	public void assignFirmware(UUID firmwareId, List<String> robotNames) {
+		robotNames.stream().map(name->repository.findByName(name))
+						   .filter(optional->optional.isPresent())
+						   .forEach(optional->{
+							   repository.assignFirmware(firmwareId,optional.get().getId());
+						   });
 	}
 
 	@Override
-	public void assignFirmware(String firmwareName, List<String> robotNames) {
-		
-		List<Robot> robots = new ArrayList<>();
-		for (String name:robotNames) {
-			Optional<Robot> optional = repository.findByName(name);
-			if(optional.isPresent()) {
-				Robot robot = optional.get();
-			}
-		}
+	public Firmware latestFirmware(String name) {
+		Optional<Robot> optional = repository.findByName(name);
+		if (optional.isPresent()) {
+			//TODO :
+			return null;
+		}else {
+			throw new NotFoundException("Robot with name "+name+" doesn't exist");
+		} 
 	}
+	
 
 }

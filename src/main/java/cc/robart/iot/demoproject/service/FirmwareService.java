@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import cc.robart.iot.demoproject.exceptions.EntityAlreadyExistsException;
 import cc.robart.iot.demoproject.exceptions.NotFoundException;
 import cc.robart.iot.demoproject.persistent.Firmware;
 import cc.robart.iot.demoproject.repository.FirmwareRepository;
@@ -33,7 +35,12 @@ public class FirmwareService implements IFirmwareService{
 
 	@Override
 	public Firmware add(@Valid Firmware firmware) {
-		return repository.save(firmware);
+		Optional<Firmware> optional = repository.findByName(firmware.getName());
+		if(optional.isPresent()) {
+			throw new EntityAlreadyExistsException("Firmware already exist");
+		}else {
+			return repository.save(firmware);
+		}
 	}
 
 	@Override
@@ -50,11 +57,7 @@ public class FirmwareService implements IFirmwareService{
 	public Firmware update(String name, Firmware firmware) {
 		Optional<Firmware> optional = repository.findByName(name);
 		if (optional.isPresent()) {
-			try {
-				BeanUtils.copyProperties(optional.get(), firmware);
-			} catch (IllegalAccessException | InvocationTargetException e) {
-				e.printStackTrace();
-			}
+			firmware.setId(optional.get().getId());
 			return repository.save(firmware);
 		}else {
 			throw new NotFoundException("Firmware with the name "+name+" doesnot exist");
@@ -63,7 +66,13 @@ public class FirmwareService implements IFirmwareService{
 
 	@Override
 	public void assignFirmware(String name, List<String> robotNames) {
-			robotService.assignFirmware(name, robotNames);
+		Optional<Firmware> optional = repository.findByName(name);
+		if (optional.isPresent()) {
+			Firmware firmware = optional.get();
+			robotService.assignFirmware(firmware.getId(), robotNames);
+		}else {
+			throw new NotFoundException("Firmware with the name "+name+" doesnot exist");
+		}
 	}
 
 }

@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -46,16 +45,40 @@ public class Firmware implements Serializable{
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 	
-	@Column(unique=true, nullable=false)
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(UUID id) {
+		this.id = id;
+	}
+
+	@Column(unique=true, nullable = false)
 	@NotNull
 	private String name;
 	
 	@Column
 	private String data;
 	
-	@OneToMany(mappedBy="hardwareVersion",cascade = {CascadeType.REMOVE})
+	@OneToMany(mappedBy="hardwareVersion")
     private Set<Robot> robots;
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getData() {
+		return data;
+	}
+
+	public void setData(String data) {
+		this.data = data;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

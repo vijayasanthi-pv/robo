@@ -9,6 +9,5 @@ import cc.robart.iot.demoproject.persistent.Firmware;
 
 @Repository
 public interface FirmwareRepository extends JpaRepository<Firmware, String>{
-
 	Optional<Firmware> findByName(String name);
 }
