@@ -1,6 +1,7 @@
 package cc.robart.iot.demoproject.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -16,6 +17,6 @@ public interface IFirmwareService {
 
 	Firmware update(String name, Firmware firmware);
 
-	void assignFirmware(String name, List<String> robotNames);
+	Optional<Firmware> findByName(String firmwareName);
 
 }

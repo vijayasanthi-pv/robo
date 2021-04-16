@@ -2,7 +2,6 @@ package cc.robart.iot.demoproject.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import javax.transaction.Transactional;
 
@@ -24,30 +23,38 @@ public class RobotService implements IRobotService{
 	@Autowired
 	private RobotRepository repository;
 	
+	@Autowired
+	private IFirmwareService firmwareService;
+	
 	@Override
 	public List<Robot> list() {
 		return repository.findAll();
-	}
-
-	@Transactional
-	@Override
-	public void assignFirmware(UUID firmwareId, List<String> robotNames) {
-		robotNames.stream().map(name->repository.findByName(name))
-						   .filter(optional->optional.isPresent())
-						   .forEach(optional->{
-							   repository.assignFirmware(firmwareId,optional.get().getId());
-						   });
 	}
 
 	@Override
 	public Firmware latestFirmware(String name) {
 		Optional<Robot> optional = repository.findByName(name);
 		if (optional.isPresent()) {
-			//TODO :
-			return null;
+			return optional.get().getHardwareVersion();
 		}else {
 			throw new NotFoundException("Robot with name "+name+" doesn't exist");
 		} 
+	}
+
+	@Transactional
+	@Override
+	public void assignFirmware(String firmwareName, List<String> robotNames) {
+		Optional<Firmware> firmwareOptional = firmwareService.findByName(firmwareName);
+		if (firmwareOptional.isPresent()) {
+			Firmware firmware = firmwareOptional.get();
+			robotNames.stream().map(name->repository.findByName(name))
+			   .filter(optional->optional.isPresent())
+			   .forEach(optional->{
+				   repository.assignFirmware(firmware.getId(),optional.get().getId());
+			   });
+		}else {
+			throw new NotFoundException("Firmware with the name "+firmwareName+" doesnot exist");
+		}
 	}
 	
 

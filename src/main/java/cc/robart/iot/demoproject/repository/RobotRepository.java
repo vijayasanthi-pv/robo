@@ -19,4 +19,5 @@ public interface RobotRepository extends JpaRepository<Robot, String>{
 	@Modifying
 	@Query("update robot set fk_firmware_id = ?1 where id = ?2")
 	void assignFirmware(@Param(value = "fk_firmware_id") UUID fk_firmware_id, @Param(value = "id") UUID id);
+	
 }

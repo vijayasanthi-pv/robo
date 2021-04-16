@@ -1,6 +1,5 @@
 package cc.robart.iot.demoproject.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -17,13 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import cc.robart.iot.demoproject.persistent.Firmware;
 import cc.robart.iot.demoproject.service.IFirmwareService;
@@ -60,12 +54,6 @@ public class FirmwareController {
 	@ResponseStatus(HttpStatus.OK)
 	public Firmware update(@PathVariable String name, @Valid @RequestBody Firmware firmware) {
 		return service.update(name,firmware);
-	}
-	
-	@PutMapping(value="/assignFirmware/{name}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@ResponseStatus(HttpStatus.CREATED)
-	public void assignFirmware(@PathVariable String name, @RequestBody List<String> robotNames) {
-		service.assignFirmware(name, robotNames);
 	}
 	
 }

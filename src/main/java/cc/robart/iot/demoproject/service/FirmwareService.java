@@ -1,12 +1,10 @@
 package cc.robart.iot.demoproject.service;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +23,6 @@ public class FirmwareService implements IFirmwareService{
 	@Autowired
 	private FirmwareRepository repository;
 	
-	@Autowired
-	private IRobotService robotService;
-
 	@Override
 	public List<Firmware> list() {
 		return repository.findAll();
@@ -65,14 +60,10 @@ public class FirmwareService implements IFirmwareService{
 	}
 
 	@Override
-	public void assignFirmware(String name, List<String> robotNames) {
-		Optional<Firmware> optional = repository.findByName(name);
-		if (optional.isPresent()) {
-			Firmware firmware = optional.get();
-			robotService.assignFirmware(firmware.getId(), robotNames);
-		}else {
-			throw new NotFoundException("Firmware with the name "+name+" doesnot exist");
-		}
+	public Optional<Firmware> findByName(String firmwareName) {
+		return repository.findByName(firmwareName);
 	}
+	
+	
 
 }
