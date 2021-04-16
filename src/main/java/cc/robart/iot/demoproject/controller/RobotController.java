@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import cc.robart.iot.demoproject.persistent.Firmware;
-import cc.robart.iot.demoproject.persistent.Robot;
+import cc.robart.iot.demoproject.dto.FirmwareDTO;
+import cc.robart.iot.demoproject.dto.RobotDTO;
 import cc.robart.iot.demoproject.service.IRobotService;
 
 @RestController
@@ -29,7 +29,7 @@ public class RobotController {
 	private IRobotService service;
 
 	@GetMapping(path="/", produces=MediaType.APPLICATION_JSON_VALUE)
-	public List<Robot> list() {
+	public List<RobotDTO> list() {
 		return service.list();
 	}
 	
@@ -40,7 +40,7 @@ public class RobotController {
 	}
 	
 	@GetMapping(path="/{name}", produces=MediaType.APPLICATION_JSON_VALUE)
-	public Firmware latestFirmware(@PathVariable String name) {
+	public FirmwareDTO latestFirmware(@PathVariable String name) {
 		return service.latestFirmware(name);
 	}
 }

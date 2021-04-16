@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import cc.robart.iot.demoproject.dto.FirmwareDTO;
 import cc.robart.iot.demoproject.persistent.Firmware;
 import cc.robart.iot.demoproject.service.IFirmwareService;
 
@@ -33,14 +34,14 @@ public class FirmwareController {
 	private IFirmwareService service;
 	
 	@GetMapping(value="/",produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<Firmware> list() {
-		List<Firmware> firmwares = service.list();	
+	public List<FirmwareDTO> list() {
+		List<FirmwareDTO> firmwares = service.list();	
 		return firmwares;
 	}
 	
 	@PostMapping(value="/",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Firmware add(@Valid @RequestBody Firmware firmware) {
+	public FirmwareDTO add(@Valid @RequestBody Firmware firmware) {
 		return service.add(firmware);
 	}
 	
@@ -52,7 +53,7 @@ public class FirmwareController {
 	
 	@PutMapping(value="/{name}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.OK)
-	public Firmware update(@PathVariable String name, @Valid @RequestBody Firmware firmware) {
+	public FirmwareDTO update(@PathVariable String name, @Valid @RequestBody Firmware firmware) {
 		return service.update(name,firmware);
 	}
 	

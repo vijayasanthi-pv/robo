@@ -3,15 +3,15 @@ package cc.robart.iot.demoproject.repository;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import cc.robart.iot.demoproject.persistent.Robot;
 
-@Repository
+@JaversSpringDataAuditable
 public interface RobotRepository extends JpaRepository<Robot, String>{
 	
 	Optional<Robot> findByName(String name);

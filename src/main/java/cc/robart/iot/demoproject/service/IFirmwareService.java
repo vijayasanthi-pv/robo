@@ -5,17 +5,18 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import cc.robart.iot.demoproject.dto.FirmwareDTO;
 import cc.robart.iot.demoproject.persistent.Firmware;
 
 public interface IFirmwareService {
 
-	List<Firmware> list();
+	List<FirmwareDTO> list();
 
-	Firmware add(@Valid Firmware firmware);
+	FirmwareDTO add(@Valid Firmware firmware);
 
 	void delete(String name);
 
-	Firmware update(String name, Firmware firmware);
+	FirmwareDTO update(String name, Firmware firmware);
 
 	Optional<Firmware> findByName(String firmwareName);
 

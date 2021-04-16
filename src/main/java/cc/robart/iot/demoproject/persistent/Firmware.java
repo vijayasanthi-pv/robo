@@ -60,8 +60,8 @@ public class Firmware implements Serializable{
 	@Column
 	private String data;
 	
-	@OneToMany(mappedBy="hardwareVersion")
-    private Set<Robot> robots;
+//	@OneToMany(mappedBy="hardwareVersion")
+//    private Set<Robot> robots;
 
 	public String getName() {
 		return name;
