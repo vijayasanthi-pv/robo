@@ -34,7 +34,7 @@ public class AuditController {
 	}
 	
 	@GetMapping("/robot/{id}")
-    public String getPersonChanges(@PathVariable UUID id) {
+    public String getParticularRobotChanges(@PathVariable UUID id) {
         QueryBuilder jqlQuery = QueryBuilder.byInstanceId(id, Robot.class)
                 .withNewObjectChanges();
 
@@ -43,8 +43,8 @@ public class AuditController {
         return "<pre>" + changes.prettyPrint() + "</pre>";
     }
 	
-	@RequestMapping("/firmwares")
-    public String getPersonChanges() {
+	@GetMapping("/firmwares")
+    public String getFirmwareChanges() {
         QueryBuilder jqlQuery = QueryBuilder.byClass(Firmware.class)
                 .withNewObjectChanges();
 
