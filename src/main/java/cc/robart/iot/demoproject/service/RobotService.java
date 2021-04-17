@@ -4,19 +4,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
-
-import org.javers.spring.annotation.JaversAuditable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cc.robart.iot.demoproject.dto.FirmwareDTO;
-import cc.robart.iot.demoproject.dto.RobotDTO;
+import cc.robart.iot.demoproject.dto.Firmware;
+import cc.robart.iot.demoproject.dto.Robot;
+import cc.robart.iot.demoproject.exceptions.EntityAlreadyExistsException;
 import cc.robart.iot.demoproject.exceptions.NotFoundException;
-import cc.robart.iot.demoproject.persistent.Firmware;
-import cc.robart.iot.demoproject.persistent.Robot;
+import cc.robart.iot.demoproject.persistent.FirmwareEntity;
+import cc.robart.iot.demoproject.persistent.RobotEntity;
 import cc.robart.iot.demoproject.repository.RobotRepository;
 import cc.robart.iot.demoproject.utils.DomainModelToViewConverter;
 
@@ -35,35 +33,44 @@ public class RobotService implements IRobotService{
 	private DomainModelToViewConverter domainModelToViewConverter;
 	
 	@Override
-	public List<RobotDTO> list() {
-		return repository.findAll().stream().map(robot->domainModelToViewConverter.robotToRobotDto(robot)).collect(Collectors.toList());
+	public List<Robot> list() {
+		return repository.findAll().stream().map(robotEntity->domainModelToViewConverter.convert(robotEntity,Robot.class)).collect(Collectors.toList());
 	}
 
 	@Override
-	public FirmwareDTO latestFirmware(String name) {
-		Optional<Robot> optional = repository.findByName(name);
+	public Firmware latestFirmware(String name) {
+		Optional<RobotEntity> optional = repository.findByName(name);
 		if (optional.isPresent()) {
-			return domainModelToViewConverter.firmwareToFirmwareDto(optional.get().getHardwareVersion());
+			return domainModelToViewConverter.convert(optional.get().getFirmware(), Firmware.class);
 		}else {
 			throw new NotFoundException("Robot with name "+name+" doesn't exist");
 		} 
 	}
 
-	@Transactional
 	@Override
 	public void assignFirmware(String firmwareName, List<String> robotNames) {
-		Optional<Firmware> firmwareOptional = firmwareService.findByName(firmwareName);
+		Optional<FirmwareEntity> firmwareOptional = firmwareService.findByName(firmwareName);
 		if (firmwareOptional.isPresent()) {
-			Firmware firmware = firmwareOptional.get();
+			FirmwareEntity firmware = firmwareOptional.get();
 			robotNames.stream().map(name->repository.findByName(name))
 			   .filter(optional->optional.isPresent())
 			   .forEach(optional->{
-				   repository.assignFirmware(firmware.getId(),optional.get().getId());
+				   RobotEntity robot = optional.get();
+				   robot.setFirmware(firmware);
+				   repository.save(robot);
 			   });
 		}else {
 			throw new NotFoundException("Firmware with the name "+firmwareName+" doesnot exist");
 		}
 	}
-	
 
+	@Override
+	public Robot create(Robot robot) {
+		Optional<RobotEntity> optional = repository.findByName(robot.getName());
+		if(optional.isPresent()) {
+			throw new EntityAlreadyExistsException("Robot already exist");
+		}else {
+			return domainModelToViewConverter.convert(repository.save(domainModelToViewConverter.convert(robot, RobotEntity.class)),Robot.class);
+		}
+	}
 }

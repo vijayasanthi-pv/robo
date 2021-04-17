@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import cc.robart.iot.demoproject.persistent.Firmware;
-import cc.robart.iot.demoproject.persistent.Robot;
+import cc.robart.iot.demoproject.persistent.FirmwareEntity;
+import cc.robart.iot.demoproject.persistent.RobotEntity;
 import cc.robart.iot.demoproject.repository.FirmwareRepository;
 import cc.robart.iot.demoproject.repository.RobotRepository;
 
@@ -35,7 +35,7 @@ public class AuditController {
 	
 	@GetMapping("/robot/{id}")
     public String getParticularRobotChanges(@PathVariable UUID id) {
-        QueryBuilder jqlQuery = QueryBuilder.byInstanceId(id, Robot.class)
+        QueryBuilder jqlQuery = QueryBuilder.byInstanceId(id, RobotEntity.class)
                 .withNewObjectChanges();
 
         Changes changes = javers.findChanges(jqlQuery.build());
@@ -45,7 +45,7 @@ public class AuditController {
 	
 	@GetMapping("/firmwares")
     public String getFirmwareChanges() {
-        QueryBuilder jqlQuery = QueryBuilder.byClass(Firmware.class)
+        QueryBuilder jqlQuery = QueryBuilder.byClass(FirmwareEntity.class)
                 .withNewObjectChanges();
 
         Changes changes = javers.findChanges(jqlQuery.build());

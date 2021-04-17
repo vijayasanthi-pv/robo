@@ -6,16 +6,15 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import org.javers.spring.annotation.JaversAuditable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cc.robart.iot.demoproject.dto.FirmwareDTO;
+import cc.robart.iot.demoproject.dto.Firmware;
 import cc.robart.iot.demoproject.exceptions.EntityAlreadyExistsException;
 import cc.robart.iot.demoproject.exceptions.NotFoundException;
-import cc.robart.iot.demoproject.persistent.Firmware;
+import cc.robart.iot.demoproject.persistent.FirmwareEntity;
 import cc.robart.iot.demoproject.repository.FirmwareRepository;
 import cc.robart.iot.demoproject.utils.DomainModelToViewConverter;
 
@@ -31,23 +30,24 @@ public class FirmwareService implements IFirmwareService{
 	private DomainModelToViewConverter domainModelToViewConverter;
 	
 	@Override
-	public List<FirmwareDTO> list() {
-		return repository.findAll().stream().map(firmware->domainModelToViewConverter.firmwareToFirmwareDto(firmware)).collect(Collectors.toList());
+	public List<Firmware> list() {
+		return repository.findAll().stream().map(firmwareEnity->domainModelToViewConverter.convert(firmwareEnity,Firmware.class)).collect(Collectors.toList());
 	}
-
+	
 	@Override
-	public FirmwareDTO add(@Valid Firmware firmware) {
-		Optional<Firmware> optional = repository.findByName(firmware.getName());
+	public Firmware create(@Valid Firmware firmware) {
+		Optional<FirmwareEntity> optional = repository.findByName(firmware.getName());
 		if(optional.isPresent()) {
 			throw new EntityAlreadyExistsException("Firmware already exist");
 		}else {
-			return domainModelToViewConverter.firmwareToFirmwareDto(repository.save(firmware));
+			FirmwareEntity entity = repository.save(domainModelToViewConverter.convert(firmware, FirmwareEntity.class));
+			return domainModelToViewConverter.convert(entity, Firmware.class);
 		}
 	}
 
 	@Override
 	public void delete(String name) {
-		Optional<Firmware> optional = repository.findByName(name);
+		Optional<FirmwareEntity> optional = repository.findByName(name);
 		if(optional.isPresent()) {
 			repository.delete(optional.get());
 		}else {
@@ -56,18 +56,19 @@ public class FirmwareService implements IFirmwareService{
 	}
 
 	@Override
-	public FirmwareDTO update(String name, Firmware firmware) {
-		Optional<Firmware> optional = repository.findByName(name);
+	public Firmware update(String name, Firmware firmware) {
+		Optional<FirmwareEntity> optional = repository.findByName(name);
 		if (optional.isPresent()) {
-			firmware.setId(optional.get().getId());
-			return domainModelToViewConverter.firmwareToFirmwareDto(repository.save(firmware));
+			FirmwareEntity firmwareEntity = domainModelToViewConverter.convert(firmware, FirmwareEntity.class);
+			firmwareEntity.setId(optional.get().getId());
+			return domainModelToViewConverter.convert(repository.save(firmwareEntity), Firmware.class);
 		}else {
 			throw new NotFoundException("Firmware with the name "+name+" doesnot exist");
 		}
 	}
 
 	@Override
-	public Optional<Firmware> findByName(String firmwareName) {
+	public Optional<FirmwareEntity> findByName(String firmwareName) {
 		return repository.findByName(firmwareName);
 	}
 

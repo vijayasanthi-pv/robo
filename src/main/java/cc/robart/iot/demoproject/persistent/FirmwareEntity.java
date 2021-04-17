@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Firmware implements Serializable{
+public class FirmwareEntity implements Serializable{
 	
 	private static final long serialVersionUID = 6714150581808220833L;
 
@@ -91,8 +91,8 @@ public class Firmware implements Serializable{
 	public boolean equals(Object obj) {
 		if (obj==this)
 			return true;
-		if (obj instanceof Firmware) {
-			Firmware firmware = (Firmware) obj;
+		if (obj instanceof FirmwareEntity) {
+			FirmwareEntity firmware = (FirmwareEntity) obj;
 				if(firmware.name.equals(this.name) && firmware.data.equals(this.data)) {
 					return true;
 				}else

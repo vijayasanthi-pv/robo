@@ -7,29 +7,32 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import cc.robart.iot.demoproject.validators.UniqueEmail;
+import cc.robart.iot.demoproject.validators.ValidPassword;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Domain object for a robot.
+ * Domain object for a User.
  *
  */
-@Entity(name="robot")
+@Entity
+@Table(name="user")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RobotEntity implements Serializable{
+public class UserEntity implements Serializable{
 	
-	private static final long serialVersionUID = -1652521451385022230L;
-
+	private static final long serialVersionUID = 7952774297535978411L;
+	
 	@Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -45,22 +48,21 @@ public class RobotEntity implements Serializable{
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 	
-	@Column(unique=true, nullable=false)
+	@Column(unique = true,name="name")
 	@NotNull
 	private String name;
 	
-	@ManyToOne
-    @JoinColumn(name ="fk_firmware_id")
-    private FirmwareEntity firmware;
+	@Column
+	@NotNull
+	@ValidPassword
+	private String password;
 	
-	public FirmwareEntity getFirmware() {
-		return firmware;
-	}
-
-	public void setFirmware(FirmwareEntity firmware) {
-		this.firmware = firmware;
-	}
-
+	@Column(unique = true)
+	@NotNull
+	@Email
+	@UniqueEmail
+	private String email;
+	
 	public String getName() {
 		return name;
 	}
@@ -68,7 +70,7 @@ public class RobotEntity implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	
 	public UUID getId() {
 		return id;
 	}
@@ -77,32 +79,20 @@ public class RobotEntity implements Serializable{
 		this.id = id;
 	}
 	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		return result;
+	public void setPassword(String password) {
+		this.password = password;
 	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj==this)
-			return true;
-		if (obj instanceof RobotEntity) {
-			RobotEntity robot = (RobotEntity) obj;
-				if(robot.name.equals(this.name) && robot.firmware.equals(this.firmware)) {
-					return true;
-				}else
-					return false;
-		}
-		
-		return false;
+	
+	public String getPassword() {
+		return this.password;
 	}
-
-	@Override
-	public String toString() {
-		return "Robot [name=" + name + ", hardwareVersion=" + firmware + "]";
+	
+	public void setEmail(String email) {
+		this.email = email;
 	}
-
+	
+	public String getEmail() {
+		return this.email;
+	}
+	
 }

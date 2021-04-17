@@ -2,13 +2,13 @@ package cc.robart.iot.demoproject.dto;
 
 import java.io.Serializable;
 
-public class RobotDTO implements Serializable{
+public class Robot implements Serializable{
 	
 private static final long serialVersionUID = 8609074210468663345L;
 	
-	public RobotDTO() {}
+	public Robot() {}
 
-	public RobotDTO(String name, String firmwareName, String firmwareData) {
+	public Robot(String name, String firmwareName, String firmwareData) {
 		super();
 		this.name = name;
 		this.firmwareName = firmwareName;
@@ -18,7 +18,16 @@ private static final long serialVersionUID = 8609074210468663345L;
 	private String name;
 	private String firmwareName;
 	private String firmwareData;
+	private Firmware firmware;
 	
+	public Firmware getFirmware() {
+		return firmware;
+	}
+
+	public void setFirmware(Firmware firmware) {
+		this.firmware = firmware;
+	}
+
 	public String getName() {
 		return name;
 	}

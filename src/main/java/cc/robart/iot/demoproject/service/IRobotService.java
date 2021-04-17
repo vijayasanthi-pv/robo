@@ -2,14 +2,16 @@ package cc.robart.iot.demoproject.service;
 
 import java.util.List;
 
-import cc.robart.iot.demoproject.dto.FirmwareDTO;
-import cc.robart.iot.demoproject.dto.RobotDTO;
+import cc.robart.iot.demoproject.dto.Firmware;
+import cc.robart.iot.demoproject.dto.Robot;
 
 public interface IRobotService {
 
-	List<RobotDTO> list();
+	List<Robot> list();
 	
-	FirmwareDTO latestFirmware(String name);
+	Firmware latestFirmware(String name);
 
 	void assignFirmware(String firmwareName, List<String> robotNames);
+
+	Robot create(Robot robot);
 }
