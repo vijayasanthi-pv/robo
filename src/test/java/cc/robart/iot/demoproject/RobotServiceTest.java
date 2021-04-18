@@ -84,5 +84,11 @@ public class RobotServiceTest {
 		}).isInstanceOf(EntityAlreadyExistsException.class)
 		.hasMessage("Robot already exist");
 	}
+	
+//	@Test
+//	@DisplayName("Should return latest firmware of a given robot")
+//	public void shouldReturnLatestFirmware() {
+//		String name = "robot_1";
+//	}
 
 }

@@ -156,6 +156,52 @@ public class FirmwareServiceTest {
 	}
 	
 	@Test
+	@DisplayName("Should update firmware name")
+	public void shouldUpdateFirmwareName() {
+		UUID id = UUID.fromString("ac122001-78e1-1eb9-8178-e16a2ada0001");
+		String name = "firmware1";
+		String changedName = "firmware2";
+		Firmware firmware = new Firmware(changedName,"data1");
+		FirmwareEntity existingFirmwareEntity = new FirmwareEntity(id,name,"data1");
+		FirmwareEntity newFirmwareEntity = new FirmwareEntity(id,changedName,"data1");
+		
+		Mockito.when(firmwareRepository.findByName(name))
+		.thenReturn(Optional.of(existingFirmwareEntity));
+		doReturn(newFirmwareEntity).when(domainModelToViewConverter).convert(firmware, FirmwareEntity.class);
+		
+		firmwareService.update(name, firmware);
+
+		Mockito.verify(firmwareRepository, Mockito.times(1)).save(firmwareEntityArgumentCaptor.capture());
+		Assertions.assertThat(firmwareEntityArgumentCaptor.getValue().getId()).isEqualTo(id);
+		Assertions.assertThat(firmwareEntityArgumentCaptor.getValue().getName()).isEqualTo(changedName);
+		Assertions.assertThat(firmwareEntityArgumentCaptor.getValue().getData()).isEqualTo("data1");
+	}
+
+	
+	@Test
+	@DisplayName("Should update both firmware name and data")
+	public void shouldUpdateFirmwareNameData() {
+		UUID id = UUID.fromString("ac122001-78e1-1eb9-8178-e16a2ada0001");
+		String name = "firmware1";
+		String changedName = "firmware2";
+		Firmware firmware = new Firmware(changedName,"data2");
+		FirmwareEntity existingFirmwareEntity = new FirmwareEntity(id,name,"data1");
+		FirmwareEntity newFirmwareEntity = new FirmwareEntity(id,changedName,"data2");
+		
+		Mockito.when(firmwareRepository.findByName(name))
+		.thenReturn(Optional.of(existingFirmwareEntity));
+		doReturn(newFirmwareEntity).when(domainModelToViewConverter).convert(firmware, FirmwareEntity.class);
+		
+		firmwareService.update(name, firmware);
+
+		Mockito.verify(firmwareRepository, Mockito.times(1)).save(firmwareEntityArgumentCaptor.capture());
+		Assertions.assertThat(firmwareEntityArgumentCaptor.getValue().getId()).isEqualTo(id);
+		Assertions.assertThat(firmwareEntityArgumentCaptor.getValue().getName()).isEqualTo(changedName);
+		Assertions.assertThat(firmwareEntityArgumentCaptor.getValue().getData()).isEqualTo("data2");
+	}
+
+	
+	@Test
 	@DisplayName("Should throw exception if firmware doesnot exist")
 	public void shouldThrowExceptionIfNoFirmware_update() {
 		String name = "firmware1";
