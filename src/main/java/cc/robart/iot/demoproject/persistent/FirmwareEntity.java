@@ -1,14 +1,12 @@
 package cc.robart.iot.demoproject.persistent;
 
 import java.io.Serializable;
-import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -27,24 +25,24 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FirmwareEntity implements Serializable{
-	
+
 	private static final long serialVersionUID = 6714150581808220833L;
 
 	@Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-        name = "UUID",
-        strategy = "org.hibernate.id.UUIDGenerator",
-        parameters = {
-            @Parameter(
-                name = "uuid_gen_strategy_class",
-                value = "org.hibernate.id.uuid.CustomVersionOneStrategy"
-            )
-        }
-    )
-    @Column(name = "id", updatable = false, nullable = false)
-    private UUID id;
-	
+	@GeneratedValue(generator = "UUID")
+	@GenericGenerator(
+			name = "UUID",
+			strategy = "org.hibernate.id.UUIDGenerator",
+			parameters = {
+					@Parameter(
+							name = "uuid_gen_strategy_class",
+							value = "org.hibernate.id.uuid.CustomVersionOneStrategy"
+							)
+			}
+			)
+	@Column(name = "id", updatable = false, nullable = false)
+	private UUID id;
+
 	public UUID getId() {
 		return id;
 	}
@@ -56,12 +54,21 @@ public class FirmwareEntity implements Serializable{
 	@Column(unique=true, nullable = false)
 	@NotNull
 	private String name;
-	
+
 	@Column
 	private String data;
+
+	public FirmwareEntity() {}
 	
-//	@OneToMany(mappedBy="hardwareVersion")
-//    private Set<Robot> robots;
+	public FirmwareEntity(UUID id, @NotNull String name, String data) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.data = data;
+	}
+
+	//	@OneToMany(mappedBy="hardwareVersion")
+	//    private Set<Robot> robots;
 
 	public String getName() {
 		return name;
@@ -78,7 +85,7 @@ public class FirmwareEntity implements Serializable{
 	public void setData(String data) {
 		this.data = data;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -93,12 +100,12 @@ public class FirmwareEntity implements Serializable{
 			return true;
 		if (obj instanceof FirmwareEntity) {
 			FirmwareEntity firmware = (FirmwareEntity) obj;
-				if(firmware.name.equals(this.name) && firmware.data.equals(this.data)) {
-					return true;
-				}else
-					return false;
+			if(firmware.name.equals(this.name) && firmware.data.equals(this.data)) {
+				return true;
+			}else
+				return false;
 		}
-		
+
 		return false;
 	}
 
@@ -106,5 +113,5 @@ public class FirmwareEntity implements Serializable{
 	public String toString() {
 		return "Firmware [name=" + name + ", data=" + data + "]";
 	}
-	
+
 }

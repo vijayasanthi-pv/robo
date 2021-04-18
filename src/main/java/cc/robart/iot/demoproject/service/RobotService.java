@@ -70,7 +70,8 @@ public class RobotService implements IRobotService{
 		if(optional.isPresent()) {
 			throw new EntityAlreadyExistsException("Robot already exist");
 		}else {
-			return domainModelToViewConverter.convert(repository.save(domainModelToViewConverter.convert(robot, RobotEntity.class)),Robot.class);
+			RobotEntity robotEntity = repository.save(domainModelToViewConverter.convert(robot, RobotEntity.class));
+			return domainModelToViewConverter.convert(robotEntity,Robot.class);
 		}
 	}
 }

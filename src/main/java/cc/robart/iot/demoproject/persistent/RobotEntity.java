@@ -53,6 +53,15 @@ public class RobotEntity implements Serializable{
     @JoinColumn(name ="fk_firmware_id")
     private FirmwareEntity firmware;
 	
+	public RobotEntity() {}
+	
+	public RobotEntity(UUID id, @NotNull String name, FirmwareEntity firmware) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.firmware = firmware;
+	}
+	
 	public FirmwareEntity getFirmware() {
 		return firmware;
 	}

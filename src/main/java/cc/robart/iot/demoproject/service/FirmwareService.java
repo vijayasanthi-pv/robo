@@ -40,8 +40,8 @@ public class FirmwareService implements IFirmwareService{
 		if(optional.isPresent()) {
 			throw new EntityAlreadyExistsException("Firmware already exist");
 		}else {
-			FirmwareEntity entity = repository.save(domainModelToViewConverter.convert(firmware, FirmwareEntity.class));
-			return domainModelToViewConverter.convert(entity, Firmware.class);
+			FirmwareEntity firmwareEntity = repository.save(domainModelToViewConverter.convert(firmware, FirmwareEntity.class));
+			return domainModelToViewConverter.convert(firmwareEntity, Firmware.class);
 		}
 	}
 
