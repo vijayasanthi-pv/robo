@@ -42,7 +42,7 @@ public class FirmwareServiceTest {
 
 	@Captor
 	private ArgumentCaptor<FirmwareEntity> firmwareEntityArgumentCaptor;
-
+	
 	@Test
 	@DisplayName("Should list the firmwares")
 	public void shouldListAllFirmwares() {
@@ -64,9 +64,7 @@ public class FirmwareServiceTest {
 		});
 		List<Firmware> actualFirmwares = firmwareService.list();
 		assertThat(actualFirmwares).hasSize(expectedFirmwares.size());
-		//Assertions.assertThat(actualFirmwares.equals(expectedFirmwares)).isTrue();
-		//assertThat(actualFirmwares).hasSameElementsAs(expectedFirmwares);
-		//Assertions.assertThat(actualFirmwares.get(2).getName()).isEqualTo(expectedFirmwares.get(2).getName());
+		assertThat(actualFirmwares).hasSameElementsAs(expectedFirmwares);
 	}
 
 	@Test

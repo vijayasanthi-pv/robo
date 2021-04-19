@@ -1,7 +1,10 @@
 package cc.robart.iot.demoproject;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -14,6 +17,7 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import cc.robart.iot.demoproject.dto.Firmware;
@@ -32,7 +36,7 @@ public class RobotServiceTest {
 	@Mock
 	private RobotRepository robotRepository;
 	
-	@Mock
+	@Spy
 	private FirmwareService firmwareService;
 	
 	@Mock
@@ -43,6 +47,36 @@ public class RobotServiceTest {
 	
 	@Captor
 	private ArgumentCaptor<RobotEntity> robotEntityArgumentCaptor;
+	
+//	@Test
+//	@DisplayName("Should list the robots")
+//	public void shouldListAllRobots() {
+//		List<RobotEntity> robotEntities = new ArrayList<RobotEntity>();
+//		robotEntities.add(new RobotEntity(UUID.fromString("ac122001-78e1-1eb9-8178-e16a2ada1111"),"robot_1",
+//								new FirmwareEntity(UUID.fromString("ac122001-78e1-1eb9-8178-e16a2ada0001"),"firmware1","data1")));
+//		robotEntities.add(new RobotEntity(UUID.fromString("bc122001-78e1-1eb9-8178-e16a2ada1111"),"robot_1",
+//				new FirmwareEntity(UUID.fromString("bc122001-78e1-1eb9-8178-e16a2ada0001"),"firmware1","data1")));
+//		robotEntities.add(new RobotEntity(UUID.fromString("cc122001-78e1-1eb9-8178-e16a2ada1111"),"robot_1",
+//				new FirmwareEntity(UUID.fromString("cc122001-78e1-1eb9-8178-e16a2ada0001"),"firmware1","data1")));
+//
+//		List<Firmware> expectedFirmwares = new ArrayList<Firmware>();
+//		expectedFirmwares.add(new Firmware("name1","data1"));
+//		expectedFirmwares.add(new Firmware("name2","data2"));
+//		expectedFirmwares.add(new Firmware("name3","data3"));
+//
+//		Mockito.when(robotRepository.findAll())
+//		.thenReturn(robotEntities);
+//		robotEntities.stream().forEach((robotEntity)->{
+//			Mockito.when(domainModelToViewConverter.convert(firmwareEntity, Firmware.class))
+//			.thenReturn(robotEntity);
+//			Mockito.when(domainModelToViewConverter.convert(robotEntity, Robot.class))
+//			.thenReturn(new Robot(robotEntity.getName(), robotEntity.getFirmware()));
+//		});
+//		List<Robot> actualRobots = robotService.list();
+//		assertThat(actualRobots).hasSize(expectedFirmwares.size());
+//		assertThat(actualFirmwares).hasSameElementsAs(expectedFirmwares);
+//	}
+
 	
 	@Test
 	@DisplayName("Should save the robot")
@@ -85,10 +119,28 @@ public class RobotServiceTest {
 		.hasMessage("Robot already exist");
 	}
 	
-//	@Test
-//	@DisplayName("Should return latest firmware of a given robot")
-//	public void shouldReturnLatestFirmware() {
-//		String name = "robot_1";
-//	}
+	@Test
+	@DisplayName("Should return latest firmware of a given robot")
+	public void shouldReturnLatestFirmware() {
+		String name = "robot_1";
+		UUID id = UUID.fromString("ac122001-78e1-1eb9-8178-e16a2ada1111");
+		FirmwareEntity firmwareEntity = new FirmwareEntity(UUID.fromString("ac122001-78e1-1eb9-8178-e16a2ada0001"),"firmware1","data1");
+		Firmware firmware = new Firmware("firmware1","data1");
+		RobotEntity robotEntity = new RobotEntity(id,name,firmwareEntity);
+		Mockito.when(robotRepository.findByName(name))
+		.thenReturn(Optional.of(robotEntity));
+		Mockito.when(domainModelToViewConverter.convert(robotEntity.getFirmware(), Firmware.class))
+		.thenReturn(firmware);
+		
+		robotService.latestFirmware(name);
+		Assertions.assertThat(firmware.getName()).isEqualTo("firmware1");
+		Assertions.assertThat(firmware.getData()).isEqualTo("data1");
+	}
+	
+	@Test
+	@DisplayName("Should assign the firmware to the list of robots")
+	public void shouldAssignFirmwareToRobots() {
+		
+	}
 
 }
