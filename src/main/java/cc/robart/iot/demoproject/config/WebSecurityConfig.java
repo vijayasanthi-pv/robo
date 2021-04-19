@@ -19,6 +19,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import cc.robart.iot.demoproject.utils.JwtAuthenticationEntryPoint;
 import cc.robart.iot.demoproject.utils.JwtRequestFilter;
 
+/**
+ * Configures security for the application
+ *
+ */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)

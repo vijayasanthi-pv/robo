@@ -67,9 +67,6 @@ public class FirmwareEntity implements Serializable{
 		this.data = data;
 	}
 
-	//	@OneToMany(mappedBy="hardwareVersion")
-	//    private Set<Robot> robots;
-
 	public String getName() {
 		return name;
 	}

@@ -20,6 +20,10 @@ import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+
+/**
+ * Swagger for testing the APIs
+ */
 @Configuration
 @EnableSwagger2
 public class SwaggerEnabler {
@@ -51,6 +55,14 @@ public class SwaggerEnabler {
 	      Collections.emptyList());
 	}
 
+	
+	/**
+	 * Configures api controller path
+	 * Returns the {@Docket }
+	 * @param attributesPriority A ordered set of attributes representing the
+	 * priority order in which attributes are evaluated
+	 * @return
+	 */
 	@Bean
 	public Docket postsApi() {
 		return new Docket(DocumentationType.SWAGGER_2)

@@ -8,6 +8,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import cc.robart.iot.demoproject.persistent.RobotEntity;
 
+/**
+ * Repository for Robot
+ *
+ */
 @JaversSpringDataAuditable
 public interface RobotRepository extends JpaRepository<RobotEntity, UUID>{
 	Optional<RobotEntity> findByName(String name);

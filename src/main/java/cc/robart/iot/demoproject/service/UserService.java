@@ -20,6 +20,10 @@ import cc.robart.iot.demoproject.repository.UserRepository;
 import cc.robart.iot.demoproject.utils.DomainModelToViewConverter;
 import cc.robart.iot.demoproject.utils.JwtTokenUtil;
 
+/**
+ * Service for the user
+ * 
+ */
 @Service
 public class UserService implements IUserService, UserDetailsService{
 
@@ -38,6 +42,10 @@ public class UserService implements IUserService, UserDetailsService{
 	@Autowired
 	private DomainModelToViewConverter domainModelToViewConverter;
 
+	/**
+	 * Registers user in the database
+	 *
+	 */
 	@Override
 	public void registerUser(User user) {
 		String encryptedPwd = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
@@ -45,6 +53,10 @@ public class UserService implements IUserService, UserDetailsService{
 		userRepository.save(domainModelToViewConverter.convert(user, UserEntity.class));
 	}
 
+	/**
+	 * Login the user 
+	 * input name, password
+	 */
 	@Override
 	public String login(String name, String password) {
 
@@ -70,6 +82,10 @@ public class UserService implements IUserService, UserDetailsService{
 		return token;
 	}
 
+	/**
+	 * Verifies the password with encrypted
+	 *
+	 */
 	private boolean checkPass(String plainPassword, String hashedPassword) {
 		boolean pwdValidation = false;
 		if (BCrypt.checkpw(plainPassword, hashedPassword))
@@ -78,7 +94,10 @@ public class UserService implements IUserService, UserDetailsService{
 		return pwdValidation;
 	}
 
-
+	/**
+	 * Loads the user by name
+	 *
+	 */
 	@Override
 	public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
 		Optional<UserEntity> optional = userRepository.findByName(name);
@@ -88,11 +107,5 @@ public class UserService implements IUserService, UserDetailsService{
 		
 		return new org.springframework.security.core.userdetails.User(userEntity.getName(), userEntity.getPassword(), new ArrayList<>());
 	}
-
-//	@Bean
-//	public PasswordEncoder passwordEncoder() {
-//		return NoOpPasswordEncoder.getInstance();
-//	}
-
 
 }

@@ -22,7 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 import cc.robart.iot.demoproject.dto.Firmware;
 import cc.robart.iot.demoproject.service.IFirmwareService;
 
-
+/**
+ * Controller for the firmware
+ *
+ */
 @RestController
 @RequestMapping("/api/firmware")
 @CrossOrigin

@@ -8,6 +8,10 @@ import org.springframework.stereotype.Repository;
 
 import cc.robart.iot.demoproject.persistent.UserEntity;
 
+/**
+ * Repository for User
+ *
+ */
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, UUID>{
 	Optional<UserEntity> findByName(String name);

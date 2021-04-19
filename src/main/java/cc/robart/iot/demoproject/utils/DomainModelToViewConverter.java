@@ -3,6 +3,9 @@ package cc.robart.iot.demoproject.utils;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+/**
+ * Domain model to view controller
+ */
 @Component
 public class DomainModelToViewConverter {
 

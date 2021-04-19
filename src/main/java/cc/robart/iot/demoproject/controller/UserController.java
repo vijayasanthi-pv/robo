@@ -20,6 +20,10 @@ import cc.robart.iot.demoproject.service.IUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
+/**
+ * Controller for the user
+ *
+ */
 @RestController
 @RequestMapping("/api/user")
 @CrossOrigin

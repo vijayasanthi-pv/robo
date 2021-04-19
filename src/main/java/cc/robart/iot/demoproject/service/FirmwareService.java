@@ -18,6 +18,10 @@ import cc.robart.iot.demoproject.persistent.FirmwareEntity;
 import cc.robart.iot.demoproject.repository.FirmwareRepository;
 import cc.robart.iot.demoproject.utils.DomainModelToViewConverter;
 
+/**
+ * Service Implementation for Firmware
+ *
+ */
 @Service
 public class FirmwareService implements IFirmwareService{
 	
@@ -28,14 +32,24 @@ public class FirmwareService implements IFirmwareService{
 	
 	@Autowired
 	private DomainModelToViewConverter domainModelToViewConverter;
-	
+	/**
+	 * Lists the firmwares
+	 * @return {@List<Firmware> }
+	 *
+	 */
 	@Override
 	public List<Firmware> list() {
 		return repository.findAll().stream().map(firmwareEnity->domainModelToViewConverter.convert(firmwareEnity,Firmware.class)).collect(Collectors.toList());
 	}
 	
+	/**
+	 * Create the firmware
+	 * @input firmware
+	 * @output {@Firmware }
+	 */
 	@Override
 	public Firmware create(@Valid Firmware firmware) {
+		logger.info("Creating Firmware .........."+firmware);
 		Optional<FirmwareEntity> optional = repository.findByName(firmware.getName());
 		if(optional.isPresent()) {
 			throw new EntityAlreadyExistsException("Firmware already exist");
@@ -45,8 +59,14 @@ public class FirmwareService implements IFirmwareService{
 		}
 	}
 
+	/**
+	 * Deletes the firmware
+	 * @return {@List<Robot> }
+	 *
+	 */
 	@Override
 	public void delete(String name) {
+		logger.info("Deleting Firmware ..........");
 		Optional<FirmwareEntity> optional = repository.findByName(name);
 		if(optional.isPresent()) {
 			repository.delete(optional.get());
@@ -55,8 +75,15 @@ public class FirmwareService implements IFirmwareService{
 		}
 	}
 
+	/**
+	 * Updates the firmware
+	 * @input - name, firmware
+	 * @return {Firmware }
+	 *
+	 */
 	@Override
 	public Firmware update(String name, Firmware firmware) {
+		logger.info("Updating Firmware ..........");
 		Optional<FirmwareEntity> optional = repository.findByName(name);
 		if (optional.isPresent()) {
 			FirmwareEntity firmwareEntity = domainModelToViewConverter.convert(firmware, FirmwareEntity.class);

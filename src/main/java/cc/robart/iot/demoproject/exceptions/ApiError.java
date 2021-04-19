@@ -7,6 +7,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
 
+/**
+ * Api Error class used for Swagger
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 public class ApiError {

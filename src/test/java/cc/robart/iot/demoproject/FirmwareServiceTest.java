@@ -28,6 +28,10 @@ import cc.robart.iot.demoproject.repository.FirmwareRepository;
 import cc.robart.iot.demoproject.service.FirmwareService;
 import cc.robart.iot.demoproject.utils.DomainModelToViewConverter;
 
+/**
+ * Tests the firmware persistent layer
+ * 
+ */
 @ExtendWith(MockitoExtension.class)
 public class FirmwareServiceTest {
 

@@ -5,6 +5,10 @@ import java.util.List;
 import cc.robart.iot.demoproject.dto.Firmware;
 import cc.robart.iot.demoproject.dto.Robot;
 
+/**
+ * Interface for Robot
+ *
+ */
 public interface IRobotService {
 
 	List<Robot> list();

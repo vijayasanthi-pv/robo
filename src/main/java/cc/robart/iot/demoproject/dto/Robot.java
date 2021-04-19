@@ -2,6 +2,10 @@ package cc.robart.iot.demoproject.dto;
 
 import java.io.Serializable;
 
+/**
+ * DTO class for the Robot
+ *
+ */
 public class Robot implements Serializable{
 
 	private static final long serialVersionUID = 8609074210468663345L;

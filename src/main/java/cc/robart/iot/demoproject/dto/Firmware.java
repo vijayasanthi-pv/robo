@@ -2,6 +2,10 @@ package cc.robart.iot.demoproject.dto;
 
 import java.io.Serializable;
 
+/**
+ * Firmware DTO class
+ *
+ */
 public class Firmware implements Serializable{
 
 	private static final long serialVersionUID = 4839299283210425924L;

@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import cc.robart.iot.demoproject.repository.UserRepository;
 
+/**
+ * Custom Email validator
+ */
 public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, String>{
 
 	@Autowired

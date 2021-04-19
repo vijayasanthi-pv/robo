@@ -17,6 +17,10 @@ import cc.robart.iot.demoproject.persistent.RobotEntity;
 import cc.robart.iot.demoproject.repository.FirmwareRepository;
 import cc.robart.iot.demoproject.repository.RobotRepository;
 
+/**
+ * Audit controller to track the changes of robot and firmware
+ *
+ */
 @RestController
 @RequestMapping("/api/audit")
 @CrossOrigin
@@ -33,6 +37,11 @@ public class AuditController {
 		this.firmwareRepository = firmwareRepository;
 	}
 	
+	/**
+	 * Returns the changes for a particular robot
+	 * @input id - UUID of the robot
+	 * @output - pretty print of the changes
+	 */
 	@GetMapping("/robot/{id}")
     public String getParticularRobotChanges(@PathVariable UUID id) {
         QueryBuilder jqlQuery = QueryBuilder.byInstanceId(id, RobotEntity.class)
@@ -43,6 +52,10 @@ public class AuditController {
         return "<pre>" + changes.prettyPrint() + "</pre>";
     }
 	
+	/**
+	 * Returns the firmwares changes
+	 * @output - pretty print of the changes
+	 */
 	@GetMapping("/firmwares")
     public String getFirmwareChanges() {
         QueryBuilder jqlQuery = QueryBuilder.byClass(FirmwareEntity.class)

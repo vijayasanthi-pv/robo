@@ -8,6 +8,10 @@ import javax.validation.Valid;
 import cc.robart.iot.demoproject.dto.Firmware;
 import cc.robart.iot.demoproject.persistent.FirmwareEntity;
 
+/**
+ * Interface for Firmware
+ *
+ */
 public interface IFirmwareService {
 
 	List<Firmware> list();

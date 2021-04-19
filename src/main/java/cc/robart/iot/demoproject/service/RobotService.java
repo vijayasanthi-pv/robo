@@ -4,9 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +20,10 @@ import cc.robart.iot.demoproject.persistent.RobotEntity;
 import cc.robart.iot.demoproject.repository.RobotRepository;
 import cc.robart.iot.demoproject.utils.DomainModelToViewConverter;
 
+/**
+ * Service Implementation for Robot
+ *
+ */
 @Service
 public class RobotService implements IRobotService{
 
@@ -36,11 +38,20 @@ public class RobotService implements IRobotService{
 	@Autowired
 	private DomainModelToViewConverter domainModelToViewConverter;
 
+	/**
+	 * Lists the robots
+	 * @return {@List<Robot> }
+	 */
 	@Override
 	public List<Robot> list() {
 		return repository.findAll().stream().map(robotEntity->domainModelToViewConverter.convert(robotEntity,Robot.class)).collect(Collectors.toList());
 	}
 
+	/**
+	 * Returns the latest firmware associated with the robot
+	 * @input name - name of the firmware
+	 * @return {@Firmware }
+	 */
 	@Override
 	public Firmware latestFirmware(String name) {
 		Optional<RobotEntity> optional = repository.findByName(name);
@@ -51,6 +62,11 @@ public class RobotService implements IRobotService{
 		} 
 	}
 
+	/**
+	 * Assigns Firmware to the given list of robots
+	 * @input firmwareName - name of the firmware
+	 * @return {@List<Robot> }
+	 */
 	@Override
 	public void assignFirmware(String firmwareName, List<String> robotNames) {
 		Optional<FirmwareEntity> firmwareOptional = firmwareService.findByName(firmwareName);
@@ -73,6 +89,11 @@ public class RobotService implements IRobotService{
 		}
 	}
 
+	/**
+	 * Create the robot
+	 * input robot - robot that has to be created
+	 * @return {Robot }
+	 */
 	@Override
 	public Robot create(Robot robot) {
 		Optional<RobotEntity> optional = repository.findByName(robot.getName());

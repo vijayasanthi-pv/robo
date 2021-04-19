@@ -8,6 +8,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import cc.robart.iot.demoproject.persistent.FirmwareEntity;
 
+/**
+ * Repository for Firmware
+ *
+ */
 @JaversSpringDataAuditable
 public interface FirmwareRepository extends JpaRepository<FirmwareEntity, UUID>{
 	Optional<FirmwareEntity> findByName(String name);

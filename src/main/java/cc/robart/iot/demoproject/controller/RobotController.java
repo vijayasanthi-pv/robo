@@ -22,6 +22,10 @@ import cc.robart.iot.demoproject.dto.Firmware;
 import cc.robart.iot.demoproject.dto.Robot;
 import cc.robart.iot.demoproject.service.IRobotService;
 
+/**
+ * Controller for the Robot
+ *
+ */
 @RestController
 @RequestMapping("/api/robot")
 @CrossOrigin
