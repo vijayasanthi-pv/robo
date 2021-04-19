@@ -18,4 +18,8 @@ public class DomainModelToViewConverter {
 	public <T> T convert(Object source, Class<T> destinationType) {
 		return modelMapper.map(source, destinationType);
 	}
+	
+	public void convert(Object source, Object destination) {
+		modelMapper.map(source, destination);
+	}
 }

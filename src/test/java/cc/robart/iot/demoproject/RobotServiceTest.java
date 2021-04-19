@@ -1,13 +1,16 @@
 package cc.robart.iot.demoproject;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.hamcrest.CoreMatchers.any;
 import static org.mockito.Mockito.doReturn;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import org.assertj.core.api.Assertions;
+import org.junit.Assert;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,6 +37,7 @@ import cc.robart.iot.demoproject.utils.DomainModelToViewConverter;
  * 
  */
 @ExtendWith(MockitoExtension.class)
+//@RunWith(MockitoJUnitRunner.class)
 public class RobotServiceTest {
 
 	@Mock
@@ -51,8 +55,6 @@ public class RobotServiceTest {
 	@Captor
 	private ArgumentCaptor<RobotEntity> robotEntityArgumentCaptor;
 
-	
-
 	@Test
 	@DisplayName("Should save the robot")
 	public void shouldSaveTheRobot() {
@@ -66,7 +68,7 @@ public class RobotServiceTest {
 		.thenReturn(robotEntity);
 
 		robotService.create(robot);
-
+		
 		Mockito.verify(robotRepository, Mockito.times(1)).save(robotEntityArgumentCaptor.capture());
 
 		Assertions.assertThat(robotEntityArgumentCaptor.getValue().getId()).isEqualTo(id);
@@ -109,25 +111,22 @@ public class RobotServiceTest {
 		Assertions.assertThat(firmware.getName()).isEqualTo("firmware1");
 		Assertions.assertThat(firmware.getData()).isEqualTo("data1");
 	}
-
+	
 	@Test
-	@DisplayName("Should assign the firmware to the list of robots")
-	public void shouldAssignFirmwareToRobots() {
+	@DisplayName("Should throw exception if any of the robot doesnot exist and shouldnot assign firmware to any robots")
+	public void shouldNotAssignFirmware() {
 		String name="firmware1";
 		String robotName = "robot_1";
 		FirmwareEntity firmwareEntity = new FirmwareEntity(UUID.fromString("ac122001-78e1-1eb9-8178-e16a2ada0001"), name, "data1");
-		RobotEntity robotEntity = new RobotEntity(UUID.fromString("ac122001-78e1-1eb9-8178-e16a2ada1111"),robotName, null);
 		doReturn(Optional.of(firmwareEntity)).when(firmwareService).findByName(name);
-		doReturn(Optional.of(robotEntity)).when(robotRepository).findByName(robotName);
+		doReturn(Optional.empty()).when(robotRepository).findByName(robotName);
 
 		ArrayList<String> robotNames = new ArrayList<String>();
 		robotNames.add("robot_1");
-		robotService.assignFirmware(name, robotNames);
-
-		Mockito.verify(robotRepository, Mockito.times(1)).save(robotEntityArgumentCaptor.capture());
-
-		Assertions.assertThat(robotEntityArgumentCaptor.getValue().getName()).isEqualTo(robotName);
-		Assertions.assertThat(robotEntityArgumentCaptor.getValue().getFirmware()).isEqualTo(firmwareEntity);
+		
+		assertThatThrownBy(()->{
+			robotService.assignFirmware(name, robotNames);
+		}).isInstanceOf(NotFoundException.class)
+		.hasMessage("Some robots does not exist");
 	}
-
 }

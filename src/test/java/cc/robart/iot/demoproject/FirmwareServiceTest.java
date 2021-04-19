@@ -2,7 +2,7 @@ package cc.robart.iot.demoproject;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doNothing;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -143,13 +143,13 @@ public class FirmwareServiceTest {
 		String name = "firmware1";
 		Firmware firmware = new Firmware(name,"data2");
 		FirmwareEntity existingFirmwareEntity = new FirmwareEntity(id,name,"data1");
-		FirmwareEntity newFirmwareEntity = new FirmwareEntity(id,name,"data2");
 		
 		Mockito.when(firmwareRepository.findByName(name))
 		.thenReturn(Optional.of(existingFirmwareEntity));
-		doReturn(newFirmwareEntity).when(domainModelToViewConverter).convert(firmware, FirmwareEntity.class);
+		doNothing().when(domainModelToViewConverter).convert(firmware, existingFirmwareEntity);
 		
 		firmwareService.update(name, firmware);
+		existingFirmwareEntity.setData("data2");
 
 		Mockito.verify(firmwareRepository, Mockito.times(1)).save(firmwareEntityArgumentCaptor.capture());
 		Assertions.assertThat(firmwareEntityArgumentCaptor.getValue().getId()).isEqualTo(id);
@@ -165,14 +165,14 @@ public class FirmwareServiceTest {
 		String changedName = "firmware2";
 		Firmware firmware = new Firmware(changedName,"data1");
 		FirmwareEntity existingFirmwareEntity = new FirmwareEntity(id,name,"data1");
-		FirmwareEntity newFirmwareEntity = new FirmwareEntity(id,changedName,"data1");
 		
 		Mockito.when(firmwareRepository.findByName(name))
 		.thenReturn(Optional.of(existingFirmwareEntity));
-		doReturn(newFirmwareEntity).when(domainModelToViewConverter).convert(firmware, FirmwareEntity.class);
+		doNothing().when(domainModelToViewConverter).convert(firmware, existingFirmwareEntity);
 		
 		firmwareService.update(name, firmware);
-
+		existingFirmwareEntity.setName(changedName);
+		
 		Mockito.verify(firmwareRepository, Mockito.times(1)).save(firmwareEntityArgumentCaptor.capture());
 		Assertions.assertThat(firmwareEntityArgumentCaptor.getValue().getId()).isEqualTo(id);
 		Assertions.assertThat(firmwareEntityArgumentCaptor.getValue().getName()).isEqualTo(changedName);
@@ -188,13 +188,14 @@ public class FirmwareServiceTest {
 		String changedName = "firmware2";
 		Firmware firmware = new Firmware(changedName,"data2");
 		FirmwareEntity existingFirmwareEntity = new FirmwareEntity(id,name,"data1");
-		FirmwareEntity newFirmwareEntity = new FirmwareEntity(id,changedName,"data2");
 		
 		Mockito.when(firmwareRepository.findByName(name))
 		.thenReturn(Optional.of(existingFirmwareEntity));
-		doReturn(newFirmwareEntity).when(domainModelToViewConverter).convert(firmware, FirmwareEntity.class);
+		doNothing().when(domainModelToViewConverter).convert(firmware, existingFirmwareEntity);
 		
 		firmwareService.update(name, firmware);
+		existingFirmwareEntity.setName(changedName);
+		existingFirmwareEntity.setData("data2");
 
 		Mockito.verify(firmwareRepository, Mockito.times(1)).save(firmwareEntityArgumentCaptor.capture());
 		Assertions.assertThat(firmwareEntityArgumentCaptor.getValue().getId()).isEqualTo(id);

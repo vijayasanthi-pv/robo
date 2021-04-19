@@ -86,9 +86,9 @@ public class FirmwareService implements IFirmwareService{
 		logger.info("Updating Firmware ..........");
 		Optional<FirmwareEntity> optional = repository.findByName(name);
 		if (optional.isPresent()) {
-			FirmwareEntity firmwareEntity = domainModelToViewConverter.convert(firmware, FirmwareEntity.class);
-			firmwareEntity.setId(optional.get().getId());
-			return domainModelToViewConverter.convert(repository.save(firmwareEntity), Firmware.class);
+			FirmwareEntity entity = optional.get();
+			domainModelToViewConverter.convert(firmware, entity);
+			return domainModelToViewConverter.convert(repository.save(entity), Firmware.class);
 		}else {
 			throw new NotFoundException("Firmware with the name "+name+" doesnot exist");
 		}

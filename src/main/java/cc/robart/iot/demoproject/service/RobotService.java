@@ -1,10 +1,9 @@
 package cc.robart.iot.demoproject.service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +36,14 @@ public class RobotService implements IRobotService{
 
 	@Autowired
 	private DomainModelToViewConverter domainModelToViewConverter;
+	
+//	public RobotService(RobotRepository repository, IFirmwareService firmwareService,
+//			DomainModelToViewConverter domainModelToViewConverter) {
+//		super();
+//		this.repository = repository;
+//		this.firmwareService = firmwareService;
+//		this.domainModelToViewConverter = domainModelToViewConverter;
+//	}
 
 	/**
 	 * Lists the robots
@@ -72,19 +79,15 @@ public class RobotService implements IRobotService{
 		Optional<FirmwareEntity> firmwareOptional = firmwareService.findByName(firmwareName);
 		if (firmwareOptional.isPresent()) {
 			FirmwareEntity firmware = firmwareOptional.get();
-			Map<String, Optional<RobotEntity>> robots = robotNames.stream()
-						.collect(Collectors.toMap(Function.identity(), name->repository.findByName(name)));
-			robots.entrySet().stream().filter(entry->!(entry.getValue().isPresent()))
-			  .findAny().ifPresent((entry)->{throw new NotFoundException("Robot "+entry.getKey()+" doesnot exist");});
-			robots.entrySet().stream().filter(entry->(entry.getValue().isPresent()))
-										.map(entry->(Optional<RobotEntity>)entry.getValue())
-										.forEach(optional->{
-											RobotEntity robot = optional.get();
-											robot.setFirmware(firmware);
-											repository.save(robot);
-										});
+			
+			Stream<String> robotsStream = robotNames.stream();
+			if (robotsStream.anyMatch(name->repository.findByName(name).equals(Optional.empty())))
+				throw new NotFoundException("Some robots does not exist");
+			else{List<RobotEntity> robotEntities = repository.findByNameIn(robotNames);
+			robotEntities.stream().forEach(robotEntity->robotEntity.setFirmware(firmware));
+			repository.saveAll(robotEntities);}
 		}else {
-			throw new NotFoundException("Firmware with the name "+firmwareName+" doesnot exist");
+			throw new NotFoundException("Firmware with the name "+firmwareName+" does not exist");
 		}
 	}
 
