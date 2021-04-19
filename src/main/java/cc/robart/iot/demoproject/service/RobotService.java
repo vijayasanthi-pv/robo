@@ -72,12 +72,11 @@ public class RobotService implements IRobotService{
 		Optional<FirmwareEntity> firmwareOptional = firmwareService.findByName(firmwareName);
 		if (firmwareOptional.isPresent()) {
 			FirmwareEntity firmware = firmwareOptional.get();
-			Map<String, Object> robots = robotNames.stream()
+			Map<String, Optional<RobotEntity>> robots = robotNames.stream()
 						.collect(Collectors.toMap(Function.identity(), name->repository.findByName(name)));
-			robots.entrySet().stream().filter(entry->!(((Optional<RobotEntity>)entry.getValue()).isPresent()))
-									  .findAny().ifPresent((entry)->{throw new NotFoundException("Robot "+entry.getKey()+" doesnot exist");});
-			
-			robots.entrySet().stream().filter(entry->(((Optional<RobotEntity>)entry.getValue()).isPresent()))
+			robots.entrySet().stream().filter(entry->!(entry.getValue().isPresent()))
+			  .findAny().ifPresent((entry)->{throw new NotFoundException("Robot "+entry.getKey()+" doesnot exist");});
+			robots.entrySet().stream().filter(entry->(entry.getValue().isPresent()))
 										.map(entry->(Optional<RobotEntity>)entry.getValue())
 										.forEach(optional->{
 											RobotEntity robot = optional.get();
