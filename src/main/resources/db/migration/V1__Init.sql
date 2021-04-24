@@ -11,6 +11,8 @@ CREATE TABLE robot (
 	id UUID PRIMARY KEY,
 	name VARCHAR(255) NOT NULL,
 	fk_firmware_id UUID,
+	created_at TIMESTAMP,
+	modified_at TIMESTAMP,
 	foreign key (fk_firmware_id) references firmware(id)
 );
 
