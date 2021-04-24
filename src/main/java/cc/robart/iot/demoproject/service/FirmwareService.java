@@ -89,9 +89,8 @@ public class FirmwareService implements IFirmwareService{
 			FirmwareEntity entity = optional.get();
 			domainModelToViewConverter.convert(firmware, entity);
 			return domainModelToViewConverter.convert(repository.save(entity), Firmware.class);
-		}else {
-			throw new NotFoundException("Firmware with the name "+name+" doesnot exist");
 		}
+		throw new NotFoundException("Firmware with the name "+name+" does not exist");
 	}
 
 	@Override

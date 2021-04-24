@@ -1,6 +1,7 @@
 package cc.robart.iot.demoproject.persistent;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -11,8 +12,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -48,6 +51,14 @@ public class RobotEntity implements Serializable{
 	@Column(unique=true, nullable=false)
 	@NotNull
 	private String name;
+	
+	@Column
+	@CreationTimestamp
+	private LocalDateTime created_at;
+	
+	@Column
+	@UpdateTimestamp
+	private LocalDateTime modified_at;
 	
 	@ManyToOne
     @JoinColumn(name ="fk_firmware_id")

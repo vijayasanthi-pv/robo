@@ -37,13 +37,14 @@ public class RobotService implements IRobotService{
 	@Autowired
 	private DomainModelToViewConverter domainModelToViewConverter;
 	
-//	public RobotService(RobotRepository repository, IFirmwareService firmwareService,
-//			DomainModelToViewConverter domainModelToViewConverter) {
-//		super();
-//		this.repository = repository;
-//		this.firmwareService = firmwareService;
-//		this.domainModelToViewConverter = domainModelToViewConverter;
-//	}
+	@Autowired
+	public RobotService(RobotRepository repository, IFirmwareService firmwareService,
+			DomainModelToViewConverter domainModelToViewConverter) {
+		super();
+		this.repository = repository;
+		this.firmwareService = firmwareService;
+		this.domainModelToViewConverter = domainModelToViewConverter;
+	}
 
 	/**
 	 * Lists the robots
@@ -72,7 +73,6 @@ public class RobotService implements IRobotService{
 	/**
 	 * Assigns Firmware to the given list of robots
 	 * @input firmwareName - name of the firmware
-	 * @return {@List<Robot> }
 	 */
 	@Override
 	public void assignFirmware(String firmwareName, List<String> robotNames) {
@@ -90,7 +90,7 @@ public class RobotService implements IRobotService{
 			throw new NotFoundException("Firmware with the name "+firmwareName+" does not exist");
 		}
 	}
-
+	
 	/**
 	 * Create the robot
 	 * input robot - robot that has to be created

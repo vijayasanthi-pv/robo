@@ -214,7 +214,7 @@ public class FirmwareServiceTest {
 		assertThatThrownBy(()->{
 			firmwareService.update(name,new Firmware(name,"data2"));
 		}).isInstanceOf(NotFoundException.class)
-		.hasMessage("Firmware with the name "+name+" doesnot exist");
+		.hasMessage("Firmware with the name "+name+" does not exist");
 	}
 	
 	@Test

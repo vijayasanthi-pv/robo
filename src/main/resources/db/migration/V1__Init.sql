@@ -1,7 +1,9 @@
 CREATE TABLE firmware (
 	id UUID PRIMARY KEY,
 	name VARCHAR(255) NOT NULL,
-	data VARCHAR(255)
+	data VARCHAR(255),
+	created_at TIMESTAMP,
+	modified_at TIMESTAMP
 );
 
 

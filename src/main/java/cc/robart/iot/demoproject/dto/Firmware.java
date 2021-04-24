@@ -36,6 +36,11 @@ public class Firmware implements Serializable{
 	public void setData(String data) {
 		this.data = data;
 	}
+	
+	@Override
+	public String toString() {
+		return "Firmware [name=" + name + ", data=" + data + "]";
+	}
 
 	@Override
 	public int hashCode() {
@@ -68,10 +73,5 @@ public class Firmware implements Serializable{
 		return true;
 	}
 
-	@Override
-	public String toString() {
-		return "Firmware [name=" + name + ", data=" + data + "]";
-	}
-
-
+	
 }
