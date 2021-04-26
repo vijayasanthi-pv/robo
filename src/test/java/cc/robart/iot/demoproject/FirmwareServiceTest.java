@@ -19,7 +19,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import cc.robart.iot.demoproject.builder.FirmwareBuilder;
+import cc.robart.iot.demoproject.builder.FirmwareEntityBuilder;
 import cc.robart.iot.demoproject.dto.Firmware;
 import cc.robart.iot.demoproject.exceptions.EntityAlreadyExistsException;
 import cc.robart.iot.demoproject.exceptions.NotFoundException;
@@ -34,6 +38,8 @@ import cc.robart.iot.demoproject.utils.DomainModelToViewConverter;
  */
 @ExtendWith(MockitoExtension.class)
 public class FirmwareServiceTest {
+	
+	Logger logger = LoggerFactory.getLogger(FirmwareServiceTest.class);
 
 	@Mock
 	private FirmwareRepository firmwareRepository;
@@ -51,20 +57,20 @@ public class FirmwareServiceTest {
 	@DisplayName("Should list the firmwares")
 	public void shouldListAllFirmwares() {
 		List<FirmwareEntity> firmwareEntities = new ArrayList<FirmwareEntity>();
-		firmwareEntities.add(new FirmwareEntity(UUID.fromString("ac122001-78e1-1eb9-8178-e16a2ada0001"),"name1","data1"));
-		firmwareEntities.add(new FirmwareEntity(UUID.fromString("bc122001-78e1-1eb9-8178-e16a2ada0001"),"name2","data2"));
-		firmwareEntities.add(new FirmwareEntity(UUID.fromString("cc122001-78e1-1eb9-8178-e16a2ada0001"),"name3","data3"));
+		firmwareEntities.add(FirmwareEntityBuilder.builder().id(UUID.fromString("ac122001-78e1-1eb9-8178-e16a2ada0001"))
+												.name("firmware1").data("data1").build());
+		firmwareEntities.add(FirmwareEntityBuilder.builder().id(UUID.fromString("bc122001-78e1-1eb9-8178-e16a2ada0001"))
+				.name("firmware2").data("data2").build());
 
 		List<Firmware> expectedFirmwares = new ArrayList<Firmware>();
-		expectedFirmwares.add(new Firmware("name1","data1"));
-		expectedFirmwares.add(new Firmware("name2","data2"));
-		expectedFirmwares.add(new Firmware("name3","data3"));
-
+		expectedFirmwares.add(FirmwareBuilder.builder().name("firmware1").data("data1").build());
+		expectedFirmwares.add(FirmwareBuilder.builder().name("firmware2").data("data2").build());
+		
 		Mockito.when(firmwareRepository.findAll())
 		.thenReturn(firmwareEntities);
 		firmwareEntities.stream().forEach((firmwareEntity)->{
 			Mockito.when(domainModelToViewConverter.convert(firmwareEntity, Firmware.class))
-			.thenReturn(new Firmware(firmwareEntity.getName(), firmwareEntity.getData()));
+			.thenReturn(FirmwareBuilder.builder().name(firmwareEntity.getName()).data(firmwareEntity.getData()).build());
 		});
 		List<Firmware> actualFirmwares = firmwareService.list();
 		assertThat(actualFirmwares).hasSize(expectedFirmwares.size());
@@ -75,13 +81,14 @@ public class FirmwareServiceTest {
 	@DisplayName("Should save the firmware")
 	public void shouldSaveTheFirmware() {
 		String name = "firmware1";
-		Firmware firmware = new Firmware(name,"data1");
+		Firmware firmware = FirmwareBuilder.builder().name(name).data("data1").build();
 		UUID id = UUID.fromString("ac122001-78e1-1eb9-8178-e16a2ada0001");
-		FirmwareEntity firmwareEntity = new FirmwareEntity(id,name,"data1");
+		FirmwareEntity firmwareEntity = FirmwareEntityBuilder.builder().id(id)
+													.name(name).data("data1").build();
 		Mockito.when(firmwareRepository.findByName(name))
-		.thenReturn(Optional.empty());
+													.thenReturn(Optional.empty());
 		Mockito.when(domainModelToViewConverter.convert(firmware, FirmwareEntity.class))
-		.thenReturn(firmwareEntity);
+													.thenReturn(firmwareEntity);
 
 		firmwareService.create(firmware);
 
@@ -95,9 +102,10 @@ public class FirmwareServiceTest {
 	@DisplayName("Should not save the firmware")
 	public void shouldNotSaveTheFirmware() {
 		String name = "firmware1";
-		Firmware firmware = new Firmware(name,"data1");
+		Firmware firmware = FirmwareBuilder.builder().name(name).data("data1").build();
 		UUID id = UUID.fromString("ac122001-78e1-1eb9-8178-e16a2ada0001");
-		FirmwareEntity firmwareEntity = new FirmwareEntity(id,name,"data1");
+		FirmwareEntity firmwareEntity = FirmwareEntityBuilder.builder().id(id)
+													.name(name).data("data1").build();
 		Mockito.when(firmwareRepository.findByName(name))
 		.thenReturn(Optional.of(firmwareEntity));
 
@@ -112,7 +120,8 @@ public class FirmwareServiceTest {
 	public void shouldDeleteTheFirmware() {
 		UUID id = UUID.fromString("ac122001-78e1-1eb9-8178-e16a2ada0001");
 		String name = "firmware1";
-		FirmwareEntity firmwareEntity = new FirmwareEntity(id,name,"data1");
+		FirmwareEntity firmwareEntity = FirmwareEntityBuilder.builder().id(id)
+														.name(name).data("data1").build();
 		Mockito.when(firmwareRepository.findByName(name))
 		.thenReturn(Optional.of(firmwareEntity));
 
@@ -141,8 +150,9 @@ public class FirmwareServiceTest {
 	public void shouldUpdateFirmwareData() {
 		UUID id = UUID.fromString("ac122001-78e1-1eb9-8178-e16a2ada0001");
 		String name = "firmware1";
-		Firmware firmware = new Firmware(name,"data2");
-		FirmwareEntity existingFirmwareEntity = new FirmwareEntity(id,name,"data1");
+		Firmware firmware = FirmwareBuilder.builder().name(name).data("data2").build();
+		FirmwareEntity existingFirmwareEntity = FirmwareEntityBuilder.builder().id(id)
+																.name(name).data("data1").build();
 		
 		Mockito.when(firmwareRepository.findByName(name))
 		.thenReturn(Optional.of(existingFirmwareEntity));
@@ -163,8 +173,9 @@ public class FirmwareServiceTest {
 		UUID id = UUID.fromString("ac122001-78e1-1eb9-8178-e16a2ada0001");
 		String name = "firmware1";
 		String changedName = "firmware2";
-		Firmware firmware = new Firmware(changedName,"data1");
-		FirmwareEntity existingFirmwareEntity = new FirmwareEntity(id,name,"data1");
+		Firmware firmware = FirmwareBuilder.builder().name(changedName).data("data1").build();
+		FirmwareEntity existingFirmwareEntity = FirmwareEntityBuilder.builder().id(id)
+															.name(name).data("data1").build();
 		
 		Mockito.when(firmwareRepository.findByName(name))
 		.thenReturn(Optional.of(existingFirmwareEntity));
@@ -186,8 +197,9 @@ public class FirmwareServiceTest {
 		UUID id = UUID.fromString("ac122001-78e1-1eb9-8178-e16a2ada0001");
 		String name = "firmware1";
 		String changedName = "firmware2";
-		Firmware firmware = new Firmware(changedName,"data2");
-		FirmwareEntity existingFirmwareEntity = new FirmwareEntity(id,name,"data1");
+		Firmware firmware = FirmwareBuilder.builder().name(changedName).data("data2").build();
+		FirmwareEntity existingFirmwareEntity = FirmwareEntityBuilder.builder().id(id)
+															.name(name).data("data1").build();
 		
 		Mockito.when(firmwareRepository.findByName(name))
 		.thenReturn(Optional.of(existingFirmwareEntity));
@@ -212,7 +224,7 @@ public class FirmwareServiceTest {
 		.thenReturn(Optional.empty());
 		
 		assertThatThrownBy(()->{
-			firmwareService.update(name,new Firmware(name,"data2"));
+			firmwareService.update(name,FirmwareBuilder.builder().name(name).data("data2").build());
 		}).isInstanceOf(NotFoundException.class)
 		.hasMessage("Firmware with the name "+name+" does not exist");
 	}
@@ -222,7 +234,8 @@ public class FirmwareServiceTest {
 	public void shouldReturnFirmwareEntity() {
 		String name = "firmware1";
 		UUID id = UUID.fromString("ac122001-78e1-1eb9-8178-e16a2ada0001");
-		FirmwareEntity firmwareEntity = new FirmwareEntity(id,name,"data1");
+		FirmwareEntity firmwareEntity = FirmwareEntityBuilder.builder().id(id)
+																.name(name).data("data1").build();
 		Mockito.when(firmwareRepository.findByName(name))
 		.thenReturn(Optional.of(firmwareEntity));
 		

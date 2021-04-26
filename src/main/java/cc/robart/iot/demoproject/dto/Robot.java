@@ -13,28 +13,22 @@ public class Robot implements Serializable{
 	private String name;
 	private Firmware firmware;
 
-	public Robot() {}
-
-	public Robot(String name, Firmware firmware) {
-		super();
-		this.name = name;
-		this.firmware = firmware;
-	}
-
 	public Firmware getFirmware() {
 		return firmware;
 	}
 
-	public void setFirmware(Firmware firmware) {
+	public Robot setFirmware(Firmware firmware) {
 		this.firmware = firmware;
+		return this;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public Robot setName(String name) {
 		this.name = name;
+		return this;
 	}
 	
 	@Override

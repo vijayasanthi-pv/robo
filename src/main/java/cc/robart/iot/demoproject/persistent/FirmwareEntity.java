@@ -61,15 +61,6 @@ public class FirmwareEntity implements Serializable{
 	@UpdateTimestamp
 	private LocalDateTime modified_at;
 	
-	public FirmwareEntity() {}
-	
-	public FirmwareEntity(UUID id, @NotNull String name, String data) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.data = data;
-	}
-	
 	public UUID getId() {
 		return id;
 	}
@@ -135,6 +126,5 @@ public class FirmwareEntity implements Serializable{
 			return false;
 		return true;
 	}
-
 	
 }

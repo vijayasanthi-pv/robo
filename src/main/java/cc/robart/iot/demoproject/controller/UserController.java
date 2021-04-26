@@ -26,7 +26,6 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @RequestMapping("/api/user")
-@CrossOrigin
 @Api( tags = "Users")
 @Validated
 public class UserController {

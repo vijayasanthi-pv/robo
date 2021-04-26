@@ -13,14 +13,6 @@ public class Firmware implements Serializable{
 	private String name;
 	private String data;
 
-	public Firmware() {}
-
-	public Firmware(String name, String data) {
-		super();
-		this.name = name;
-		this.data = data;
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -72,6 +64,5 @@ public class Firmware implements Serializable{
 			return false;
 		return true;
 	}
-
 	
 }

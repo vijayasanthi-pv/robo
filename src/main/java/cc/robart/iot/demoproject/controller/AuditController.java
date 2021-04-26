@@ -23,7 +23,6 @@ import cc.robart.iot.demoproject.repository.RobotRepository;
  */
 @RestController
 @RequestMapping("/api/audit")
-@CrossOrigin
 public class AuditController {
 
 	private final Javers javers;

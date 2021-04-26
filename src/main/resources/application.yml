@@ -1,16 +1,29 @@
 spring:
+  h2:
+    console:
+      enabled: false
   flyway:
     locations: classpath:/db/migration
     check-location: true
 
   datasource:
-    url: jdbc:h2:mem:demo_project;DB_CLOSE_DELAY=-1;
+#    url: jdbc:h2:mem:demo_project;DB_CLOSE_DELAY=-1;
+    url: jdbc:h2:tcp://localhost/~/h2_data/demo_project
     driver-class-name: org.h2.Driver
     type: org.apache.tomcat.jdbc.pool.DataSource
     #username: h2user
     #password: h2pass
-
   jpa:
+    properties:
+      javax.persistence.validation.mode: none
+        
     hibernate:
       ddl-auto: validate
       
+db:
+  port: 9123
+     
+jwt:
+  secret: firmware
+  
+  

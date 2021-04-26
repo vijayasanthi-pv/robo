@@ -28,7 +28,6 @@ import cc.robart.iot.demoproject.service.IRobotService;
  */
 @RestController
 @RequestMapping("/api/robot")
-@CrossOrigin
 @Validated
 public class RobotController {
 	

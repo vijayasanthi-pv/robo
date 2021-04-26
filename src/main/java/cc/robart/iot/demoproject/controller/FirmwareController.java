@@ -28,7 +28,6 @@ import cc.robart.iot.demoproject.service.IFirmwareService;
  */
 @RestController
 @RequestMapping("/api/firmware")
-@CrossOrigin
 @Validated
 public class FirmwareController {
 	
