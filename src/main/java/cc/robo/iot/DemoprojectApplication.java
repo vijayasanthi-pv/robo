@@ -11,7 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
  *
  */
 @SpringBootApplication
-@ComponentScan(basePackages = {"cc.robart.iot.demoproject.*"})
+@ComponentScan(basePackages = {"cc.robo.iot.*"})
 public class DemoprojectApplication {
 
 	public static void main(String[] args) {
