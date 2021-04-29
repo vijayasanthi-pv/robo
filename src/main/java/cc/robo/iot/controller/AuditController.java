@@ -29,7 +29,6 @@ public class AuditController {
 	private final RobotRepository robotRepository;
 	private final FirmwareRepository firmwareRepository;
 
-	@Autowired
 	public AuditController(Javers javers, RobotRepository robotRepository, FirmwareRepository firmwareRepository) {
 		this.javers = javers;
 		this.robotRepository = robotRepository;
